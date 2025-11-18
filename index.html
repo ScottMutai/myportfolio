@@ -307,7 +307,7 @@
         <div class="container">
             <h2 class="section-title">Technical Skills</h2>
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="skill-card">
                         <i class="fas fa-desktop skill-icon"></i>
                         <h4>Frontend Development</h4>
@@ -319,20 +319,19 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="skill-card">
                         <i class="fas fa-server skill-icon"></i>
                         <h4>Backend Development</h4>
                         <ul class="skill-list mt-3">
                             <li><i class="fas fa-check-circle"></i> Node.js & Express</li>
-                    
                             <li><i class="fas fa-check-circle"></i> RESTful APIs</li>
                             <li><i class="fas fa-check-circle"></i> GraphQL</li>
                             <li><i class="fas fa-check-circle"></i> Microservices</li>
                         </ul>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="skill-card">
                         <i class="fas fa-database skill-icon"></i>
                         <h4>Database & Cloud</h4>
@@ -342,6 +341,19 @@
                             <li><i class="fas fa-check-circle"></i> AWS & Azure</li>
                             <li><i class="fas fa-check-circle"></i> Docker & Kubernetes</li>
                             <li><i class="fas fa-check-circle"></i> CI/CD Pipelines</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="skill-card">
+                        <i class="fas fa-project-diagram skill-icon"></i>
+                        <h4>Project Management</h4>
+                        <ul class="skill-list mt-3">
+                            <li><i class="fas fa-check-circle"></i> Agile & Scrum</li>
+                            <li><i class="fas fa-check-circle"></i> Jira & Trello</li>
+                            <li><i class="fas fa-check-circle"></i> Git & GitHub</li>
+                            <li><i class="fas fa-check-circle"></i> Team Collaboration</li>
+                            <li><i class="fas fa-check-circle"></i> Sprint Planning</li>
                         </ul>
                     </div>
                 </div>
@@ -385,7 +397,6 @@
                                 <span class="tech-badge">mySQL</span>
                             </div>
                             <a href="https://github.com/ScottMutai/Parkingsystemm" target="_blank" class="btn btn-sm btn-primary">View Project</a>
-
                         </div>
                     </div>
                 </div>
@@ -439,22 +450,25 @@
                             </div>
                         </div>
                     </div>
-                    <form>
+                    <form id="contact-form">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <input type="text" class="form-control" placeholder="Your Name">
+                                <input type="text" class="form-control" placeholder="Your Name" name="from_name" required>
                             </div>
                             <div class="col-md-6">
-                                <input type="email" class="form-control" placeholder="Your Email">
+                                <input type="email" class="form-control" placeholder="Your Email" name="from_email" required>
                             </div>
                             <div class="col-12">
-                                <input type="text" class="form-control" placeholder="Subject">
+                                <input type="text" class="form-control" placeholder="Subject" name="subject" required>
                             </div>
                             <div class="col-12">
-                                <textarea class="form-control" rows="5" placeholder="Your Message"></textarea>
+                                <textarea class="form-control" rows="5" placeholder="Your Message" name="message" required></textarea>
                             </div>
                             <div class="col-12 text-center">
-                                <button type="submit" class="btn btn-primary btn-lg">Send Message</button>
+                                <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">Send Message</button>
+                            </div>
+                            <div class="col-12 text-center mt-3">
+                                <div id="form-message" style="display: none;"></div>
                             </div>
                         </div>
                     </form>
@@ -467,7 +481,7 @@
     <footer class="text-center">
         <div class="container">
             <div class="social-links mb-3">
-                 <a href="https://github.com/ScottMutai" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/ScottMutai" target="_blank" class="social-icon"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/scott-mutai" target="_blank" class="social-icon"><i class="fab fa-linkedin"></i></a>
                 <a href="https://twitter.com/Scottmutai" target="_blank" class="social-icon"><i class="fab fa-twitter"></i></a>
                 <a href="https://instagram.com/_scott.yy" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a>
@@ -477,5 +491,64 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script>
+        // Initialize EmailJS with your Public Key
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY"); // Replace with your actual public key
+        })();
+
+        // Handle form submission
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const submitBtn = document.getElementById('submit-btn');
+            const formMessage = document.getElementById('form-message');
+            
+            // Disable button and show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            
+            // Send email using EmailJS
+            emailjs.sendForm('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', this)
+                .then(function(response) {
+                    console.log('SUCCESS!', response.status, response.text);
+                    
+                    // Show success message
+                    formMessage.style.display = 'block';
+                    formMessage.className = 'alert alert-success';
+                    formMessage.innerHTML = '<i class="fas fa-check-circle"></i> Message sent successfully! I\'ll get back to you soon.';
+                    
+                    // Reset form
+                    document.getElementById('contact-form').reset();
+                    
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Send Message';
+                    
+                    // Hide message after 5 seconds
+                    setTimeout(() => {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                    
+                }, function(error) {
+                    console.log('FAILED...', error);
+                    
+                    // Show error message
+                    formMessage.style.display = 'block';
+                    formMessage.className = 'alert alert-danger';
+                    formMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> Failed to send message. Please try again or email me directly.';
+                    
+                    // Reset button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = 'Send Message';
+                    
+                    // Hide message after 5 seconds
+                    setTimeout(() => {
+                        formMessage.style.display = 'none';
+                    }, 5000);
+                });
+        });
+    </script>
 </body>
 </html>
